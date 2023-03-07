@@ -8,6 +8,11 @@ public class Cliente extends Pessoa{
 		double valorDebito;
 		List<Veiculo> veiculosAlugados;
 	
+		public Cliente(int id, String nome, String endereco, String cpf, String senha) {
+			super(id, nome, endereco, cpf, senha);
+			veiculosAlugados = new ArrayList<>();
+		}
+		
 		public Cliente(String nome, String endereco, String cpf, String senha) {
 		super(nome, endereco, cpf, senha);
 		

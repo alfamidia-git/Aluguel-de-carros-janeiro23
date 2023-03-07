@@ -51,6 +51,14 @@ public class Veiculo {
 		this.status = Status.LIVRE;
 	}
 	
+	public Veiculo(int id, String placa, String cor, String marca, String modelo, int ano, Segmento segmento, 
+			Combustivel combustivel, double valorDiario, Status status) {
+		
+		this(placa, cor, marca, modelo, ano, segmento, combustivel, valorDiario);
+		this.id = id;
+		this.status = status;
+	}
+	
 	public int getId() {
 		return this.id;
 	}

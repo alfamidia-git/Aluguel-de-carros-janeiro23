@@ -59,19 +59,19 @@ public class VeiculoService {
 	}
 	
 	private boolean checarPlaca(String placa) {
-		List<Veiculo> todosVeiculos = this.repository.buscarTodos();
+		List<Veiculo> todosVeiculos = this.repository.buscarTodos("where placa = " + placa);
 		
 		return todosVeiculos.stream().anyMatch(veiculo -> veiculo.getPlaca().equals(placa));
 	}
 	
 	
 	public void mostrarTodosVeiculosLivres() {
-		this.repository.buscarTodos().stream().filter(veiculo -> veiculo.getStatus() == Status.LIVRE)
+		this.repository.buscarTodos("WHERE status = 'LIVRE' ").stream().filter(veiculo -> veiculo.getStatus() == Status.LIVRE)
 																				.forEach(System.out::println);
 	}
 	
 	public void mostrarTodosVeiculos() {
-		this.repository.buscarTodos().forEach(System.out::println);
+		this.repository.buscarTodos(null).forEach(System.out::println);
 	}
 	
 	public Veiculo buscarPorId(Integer id) {

@@ -10,6 +10,13 @@ public abstract class Pessoa {
 	private String cpf;
 	private String senha;
 	
+	public Pessoa(int id, String nome, String endereco, String cpf, String senha) {
+		this.id = id;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.cpf = cpf;
+		this.senha = senha;
+	}
 	
 	public Pessoa(String nome, String endereco, String cpf, String senha) {
 		this.id = Contador.proximoId();

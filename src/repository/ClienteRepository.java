@@ -1,5 +1,9 @@
 package repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +14,7 @@ import model.Cliente;
 public class ClienteRepository {
 
 	private Map<Integer, Cliente> repository;
+	private Connection connection;
 	
 	public ClienteRepository() {
 		this.repository = new HashMap<>();
@@ -18,7 +23,31 @@ public class ClienteRepository {
 	}
 	
 	public void salvar(Cliente cliente) {
-		this.repository.put(cliente.getId(), cliente);
+//		this.repository.put(cliente.getId(), cliente);
+		
+		this.connection = BancoDeDados.obterConexao();
+		
+		String query = "INSERT INTO cliente (nome, endereco, cpf, senha) values (?, ?, ?, ?)";
+		
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+			ps.setString(1, cliente.getNome());
+			ps.setString(2, cliente.getEndereco());
+			ps.setString(3, cliente.getCpf());
+			ps.setString(4, cliente.getSenha());
+			
+			int sucesso = ps.executeUpdate();
+			
+			if(sucesso == 1) {
+				System.out.println("Salvo com sucesso no banco de dados!");
+			}else {
+				System.out.println("Erro ao salvar no banco de dados!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			BancoDeDados.fecharConexao();
+		}
 	}
 	
 	public void remover(Integer id) {
@@ -34,6 +63,33 @@ public class ClienteRepository {
 	}
 	
 	public Cliente buscarPorCpf(String cpf) {
-		return this.buscarTodos().stream().filter(cliente -> cliente.getCpf().equals(cpf)).findFirst().orElse(null);
+//		return this.buscarTodos().stream().filter(cliente -> cliente.getCpf().equals(cpf)).findFirst().orElse(null);
+		this.connection = BancoDeDados.obterConexao();
+		
+		String query = "SELECT * FROM cliente where cpf = " + cpf;
+		
+		
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String nome = rs.getString("nome");
+				String senha = rs.getString("senha");
+				String endereco = rs.getString("endereco");
+				
+				return new Cliente(id, nome, endereco, cpf, senha);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			BancoDeDados.fecharConexao();
+		}
+		
+		return null;
+		
+		
 	}
 }

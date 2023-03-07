@@ -6,6 +6,7 @@ import model.Admin;
 import model.Cliente;
 import model.Veiculo;
 import model.Vendedor;
+import repository.BancoDeDados;
 import service.AdminService;
 import service.ClienteService;
 import service.VeiculoService;
@@ -16,6 +17,7 @@ import utils.UtilsService;
 public class Principal {
 
 	public static void main(String args[]) throws InterruptedException {
+		
 		Scanner sc = new Scanner(System.in);
 		boolean continuar = true;
 
