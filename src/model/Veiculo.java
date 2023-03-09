@@ -39,7 +39,6 @@ public class Veiculo {
 	
 	public Veiculo(String placa, String cor, String marca, String modelo, int ano, Segmento segmento, 
 					Combustivel combustivel, double valorDiario) {
-		this.id = Contador.proximoId();
 		this.placa = placa;
 		this.marca = marca;
 		this.cor = cor;

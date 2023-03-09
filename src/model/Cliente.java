@@ -8,8 +8,9 @@ public class Cliente extends Pessoa{
 		double valorDebito;
 		List<Veiculo> veiculosAlugados;
 	
-		public Cliente(int id, String nome, String endereco, String cpf, String senha) {
+		public Cliente(int id, String nome, String endereco, String cpf, String senha, Double valorDebito) {
 			super(id, nome, endereco, cpf, senha);
+			this.valorDebito = valorDebito;
 			veiculosAlugados = new ArrayList<>();
 		}
 		

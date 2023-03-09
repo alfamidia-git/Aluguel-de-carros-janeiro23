@@ -2,20 +2,29 @@ package service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 import model.Cliente;
 import model.Veiculo;
+import model.Venda;
 import repository.ClienteRepository;
+import repository.VeiculoRepository;
+import repository.VendaRepository;
+import repository.VendedorRepository;
 
 public class ClienteService {
 
 	ClienteRepository repository;
+	VeiculoRepository veiculoRepository;
+	VendaRepository vendaRepository;
 	Scanner sc;
 	
 	public ClienteService(Scanner sc) {
 		this.sc = sc;
 		this.repository = new ClienteRepository();
+		this.veiculoRepository = new VeiculoRepository();
+		this.vendaRepository = new VendaRepository();
 	}
 	
 	public Cliente procurarCliente(String cpf) {
@@ -59,9 +68,9 @@ public class ClienteService {
 	}
 	
 	public void devolverVeiculo(Cliente cliente, Veiculo veiculo) {
-		cliente.getVeiculosAlugados().remove(veiculo);
-		
-		this.repository.salvar(cliente);
+		Venda venda = this.vendaRepository.buscarPeloClienteEVeiculo(cliente.getId(), veiculo.getId());
+		venda.setEntregue(true);
+		this.vendaRepository.salvar(venda);
 	}
 	
 	public void mostrarVeiculosEDebitos(Cliente cliente) {
@@ -71,7 +80,8 @@ public class ClienteService {
 	}
 	
 	public void mostrarVeiculosAlugados(Cliente cliente) {
-		cliente = this.repository.buscarPorId(cliente.getId());
-		cliente.getVeiculosAlugados().forEach(veiculo -> System.out.println(veiculo));
+		List<Veiculo> veiculosAlugados = this.veiculoRepository.buscarVeiculosPeloClienteId(cliente.getId());
+		
+		veiculosAlugados.forEach(veiculo -> System.out.println(veiculo));
 	}
 }

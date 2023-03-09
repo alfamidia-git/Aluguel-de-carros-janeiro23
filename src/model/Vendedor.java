@@ -8,6 +8,14 @@ public class Vendedor extends Pessoa{
 	private double comissao;
 	private int vendas;
 	
+	public Vendedor(int id, String nome, String endereco, String cpf, String senha, double salario,
+																double comissao, int vendas) {
+		super(id, nome, endereco, cpf, senha);
+		this.salario = salario;
+		this.comissao = comissao;
+		this.vendas = vendas;
+	}
+	
 	public Vendedor(String nome, String endereco, String cpf, String senha, double salario) {
 		super(nome, endereco, cpf, senha);
 		this.salario = salario;
