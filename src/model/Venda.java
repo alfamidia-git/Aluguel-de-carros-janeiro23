@@ -18,12 +18,21 @@ public class Venda {
 		this.id = id;
 		this.entregue = entregue;
 	}
+	
 	public Venda(Vendedor vendedor, Veiculo veiculo, Cliente cliente){
 		this.vendedor = vendedor;
 		this.veiculo = veiculo;
 		this.cliente = cliente;
 		data = LocalDate.now();
 	}
+	
+	public Venda(int id, Cliente cliente, Veiculo veiculo, Vendedor vendedor, LocalDate data) {
+		this(vendedor, veiculo, cliente);
+		this.id = id;
+		this.data = data;
+	}
+	
+	
 	public Integer getId() {
 		return id;
 	}

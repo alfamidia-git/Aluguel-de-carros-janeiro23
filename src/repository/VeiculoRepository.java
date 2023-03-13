@@ -26,7 +26,7 @@ public class VeiculoRepository {
 	}
 
 	public void salvar(Veiculo veiculo) {
-		Veiculo veiculoBD = this.buscarPorId(veiculo.getId());
+		Veiculo veiculoBD = this.buscarPorId(veiculo.getId(), true);
 		String query = null;
 		this.connection = BancoDeDados.obterConexao();
 		if (veiculoBD == null) {
@@ -63,7 +63,24 @@ public class VeiculoRepository {
 	}
 
 	public void deletar(int id) {
-		this.repository.remove(id);
+		this.connection = BancoDeDados.obterConexao();
+
+		String query = "DELETE FROM `veiculo` WHERE id = " + id;
+
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+			if(ps.executeUpdate() == 1) {
+				System.out.println("Excluido com sucesso!");
+			}else {
+				System.out.println("Erro ao excluir");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+				BancoDeDados.fecharConexao();
+
+		}
 	}
 
 	public List<Veiculo> buscarTodos(String condicao) {
@@ -103,7 +120,7 @@ public class VeiculoRepository {
 
 	}
 
-	public Veiculo buscarPorId(int id) {
+	public Veiculo buscarPorId(int id, boolean fecharConexao) {
 
 		this.connection = BancoDeDados.obterConexao();
 
@@ -132,7 +149,9 @@ public class VeiculoRepository {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			BancoDeDados.fecharConexao();
+			if(fecharConexao) {
+				BancoDeDados.fecharConexao();
+			}
 		}
 
 		return null;

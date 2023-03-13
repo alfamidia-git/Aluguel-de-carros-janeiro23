@@ -68,8 +68,34 @@ public class ClienteRepository {
 		return this.repository.values().stream().collect(Collectors.toList());
 	}
 
-	public Cliente buscarPorId(Integer id) {
-		return this.repository.get(id);
+	public Cliente buscarPorId(Integer id, boolean fecharConexao) {
+		this.connection = BancoDeDados.obterConexao();
+
+		String query = "SELECT * FROM cliente where id = " + id;
+
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				String cpf = rs.getString("cpf");
+				String nome = rs.getString("nome");
+				String senha = rs.getString("senha");
+				String endereco = rs.getString("endereco");
+				double valorDebito = rs.getDouble("valor_debito");
+
+				return new Cliente(id, nome, endereco, cpf, senha, valorDebito);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(fecharConexao) {
+				BancoDeDados.fecharConexao();
+			}
+		}
+
+		return null;
 	}
 
 	public Cliente buscarPorCpf(String cpf) {

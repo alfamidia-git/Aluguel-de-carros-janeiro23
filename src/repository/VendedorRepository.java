@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import model.Cliente;
 import model.Vendedor;
 
 public class VendedorRepository {
@@ -22,7 +23,7 @@ public class VendedorRepository {
 	}
 	
 	public void salvar(Vendedor vendedor) {
-		Vendedor vendedorBD = this.buscarPorId(vendedor.getId());
+		Vendedor vendedorBD = this.buscarPorId(vendedor.getId(), true);
 		
 		
 		this.connection = BancoDeDados.obterConexao();
@@ -77,7 +78,23 @@ public class VendedorRepository {
 	}
 	
 	public void remover(Integer id) {
-		this.repository.remove(id);
+		this.connection = BancoDeDados.obterConexao();
+
+		String query = "DELETE FROM `vendedor` WHERE id = " + id;
+
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+			if(ps.executeUpdate() == 1) {
+				System.out.println("Excluido com sucesso!");
+			}else {
+				System.out.println("Erro ao excluir");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			BancoDeDados.fecharConexao();
+		}
 	}
 	
 	public List<Vendedor> buscarTodos(){
@@ -112,7 +129,7 @@ public class VendedorRepository {
 			
 	}
 	
-	public Vendedor buscarPorId(Integer id) {
+	public Vendedor buscarPorId(Integer id, boolean fecharConexao) {
 		this.connection = BancoDeDados.obterConexao();
 		String query = "select * from vendedor where id = " + id;
 		
@@ -135,9 +152,41 @@ public class VendedorRepository {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			BancoDeDados.fecharConexao();
+			if(fecharConexao) {
+				BancoDeDados.fecharConexao();
+			}
 		}
 		
+		return null;
+	}
+	
+	public Vendedor buscarPorCpf(String cpf) {
+		this.connection = BancoDeDados.obterConexao();
+
+		String query = "SELECT * FROM vendedor where cpf = " + cpf;
+
+		try {
+			PreparedStatement ps = this.connection.prepareStatement(query);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String nome = rs.getString("nome");
+				String senha = rs.getString("senha");
+				String endereco = rs.getString("endereco");
+				double salario = rs.getDouble("salario");
+				double comissao = rs.getDouble("comissao");
+				int vendas = rs.getInt("vendas");
+				
+				return new Vendedor(id, nome, endereco, cpf, senha, salario, comissao, vendas);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			BancoDeDados.fecharConexao();
+		}
+
 		return null;
 	}
 }

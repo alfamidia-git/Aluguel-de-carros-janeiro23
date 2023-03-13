@@ -6,4 +6,8 @@ public class Admin extends Pessoa{
 		super(nome, endereco, cpf, senha);
 	}
 
+	public Admin(int id, String nome, String endereco, String cpf, String senha) {
+		super(id, nome, endereco, cpf, senha);		
+	}
+
 }

@@ -29,7 +29,7 @@ public class VendedorService {
 	}
 	
 	public void adicionarVenda(int idVendedor, Veiculo veiculo, int diasAlugado, Cliente cliente) {
-		Vendedor vendedor = this.repository.buscarPorId(idVendedor);
+		Vendedor vendedor = this.repository.buscarPorId(idVendedor, true);
 		
 		if(vendedor == null) {
 			throw new SistemaException("Vendedor não localizado!");
@@ -45,9 +45,13 @@ public class VendedorService {
 	}
 
 	public Vendedor procurarVendedor(String cpf) {
-		List<Vendedor> vendedores = this.repository.buscarTodos();
+		Vendedor vendedor = this.repository.buscarPorCpf(cpf);
 		
-		return vendedores.stream().filter(vendedor -> vendedor.getCpf().equals(cpf)).findFirst().orElse(null);
+		if(vendedor == null) {
+			throw new SistemaException("Vendedor não localizado!");
+		}
+		
+		return vendedor;
 	}
 
 	public void mostrarDetalhesDoVendedor(Vendedor vendedor) {
@@ -57,9 +61,7 @@ public class VendedorService {
 	}
 	
 	public void mostrarVendasDoVendedor(Vendedor vendedor) {
-		List<Venda> todasVendas = this.vendaRepository.buscarTodos();
-		
-		todasVendas.removeIf(venda -> venda.getVendedor().getId() != vendedor.getId());
+		List<Venda> todasVendas = this.vendaRepository.buscarVendasPorVendedor(vendedor.getId());
 		
 		todasVendas.forEach(venda -> System.out.println(venda));
 	}
